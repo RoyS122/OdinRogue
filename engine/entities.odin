@@ -1,27 +1,46 @@
 package engine;
 
- import  "rogue:utils" 
+import "core:fmt"
 import rl"vendor:raylib"
+import  "rogue:utils" 
 
 Vec3D :: utils.Vec3D;
 
 Entity :: struct {
-    RelativeID: i8,
-    Pos: Vec3D,
-    Shape: Vec3D,
-    Colors: [2]rl.Color,
-    
+    using header: CellAttributes,
+
 }
 
-EMove::proc(e: ^Entity, m: ^Map, v: Vec3D) {
-    if(e.RelativeID < 0) {
+EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {
+    o: ^CellAttributes = GetCellAttributes(e);
+
+    adjustedPos: Vec3D = m.origin + o.Pos;
+    if(o.RelativeID >= 0) {
+        c := &m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)]; 
+        for i: int = 0; i < len(c.objects); i += 1 {
+            checkObj: ^CellAttributes = GetCellAttributes(c.objects[i])
+            if(checkObj.RelativeID == o.RelativeID) {
+                unordered_remove(&c.objects, i);
+                o.RelativeID = -1;
+            }
+        }
+        
+    }
+   
+    o.Pos += v;
+    adjustedPos += v;
+    inboud_map: bool =  m.size[0].x <= adjustedPos.x && adjustedPos.x < m.size[1].x && 
+                        m.size[0].y <= adjustedPos.y && adjustedPos.y < m.size[1].y && 
+                        m.size[0].z <= adjustedPos.z && adjustedPos.z < m.size[1].z;
+          
+    if !inboud_map {
+        o.RelativeID = -1;
         return;
     }
-    c := m[int(e.Pos.z)][int(e.Pos.y)][int(e.Pos.x)]; 
-    for i := 0; i < len(c.entities); i += 1 {
-        if(c.entities[i].RelativeID == e.RelativeID) {
 
-        }
-    }
-       
+    nc := &m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)];
+    
+    o.RelativeID = GetAvailableID(nc^);
+    
+    append(&nc.objects, e);
 }

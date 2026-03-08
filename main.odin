@@ -29,9 +29,9 @@ main :: proc() {
     testCam.fovy = f32(45);
     testCam.projection = .PERSPECTIVE;
 
-    testCell: engine.Cell;
-    testEntity: engine.Entity = {Pos = {0, 0, -1}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}};
-    append(&testCell.entities, &testEntity)
+    testMap: engine.Map = engine.BuildMap({20, 20, 20}, {10, 0, 10});
+    testEntity: engine.Entity = {Pos = {-9, 0, 0}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}};
+    engine.AddObject(&testMap, &testEntity);
     targetFPS: i32 = 60;
     
     
@@ -67,25 +67,28 @@ main :: proc() {
         if rl.IsKeyPressed(.DOWN) {
             move.z += 1;
         }
-        
-        testEntity.Pos += move;
+        if(move != 0 ) {
+            fmt.println("move called")
+            engine.EMove(&testMap, &testEntity, move);
+        }
+       
 
         rl.BeginDrawing();
 
 	    rl.ClearBackground(rl.RAYWHITE);
         
         rl.BeginMode3D(testCam);
-        render.RenderCell3D(testCell);
-        rl.DrawGrid(20, 1)        // Draw a grid
+        render.RenderMap3D(testMap);
+       
         
-		
-
+        rl.DrawGrid(20, 1)
+    
+  
 		rl.EndMode3D()
 
 		rl.DrawFPS(10, 10)
-	    rl.EndDrawing();
+        rl.EndDrawing();
         
-
     }
   
   
