@@ -21,7 +21,7 @@ main :: proc() {
     a: u8 = 255;
     fmt.println("Hellope!", a);
 
-    fmt.println(test.TestProc(int(a), 2));
+    
 
     testCam: rl.Camera3D;
     testCam.position = Vec3D{-10, 10, 10};
@@ -31,10 +31,17 @@ main :: proc() {
     testCam.projection = .PERSPECTIVE;
 
     testMap: engine.Map = engine.BuildMap({20, 20, 20}, {10, 0, 10});
-    testEntity: engine.Entity = {Pos = {-9, 0, 0}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}};
+    testEntity: engine.Entity = {Pos = {-9, 0, 0}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}, Commonprops={.GravityApply}, Climb={ClimbMax=1, StepHeight=0.25}};
 
-    testWall: engine.Material = {Pos = {7, 0, -5}, Shape = {1, 1, 1}, Colors={rl.DARKGRAY, rl.GRAY}, props={.Solid}};
+    testWall: engine.Material = {Pos = {7, 0, -5}, Shape = {1, 0.25, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
+    testWall2: engine.Material = {Pos = {7, 0, -6}, Shape = {1, 0.5, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
+    testWall3: engine.Material = {Pos = {7, 0, -7}, Shape = {1, 0.75, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
+    testWall4: engine.Material = {Pos = {7, 0, -8}, Shape = {1, 1, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
+    
+    engine.AddObject(&testMap, &testWall4);
+    engine.AddObject(&testMap, &testWall3);
     engine.AddObject(&testMap, &testWall);
+    engine.AddObject(&testMap, &testWall2);
     engine.AddObject(&testMap, &testEntity);
     targetFPS: i32 = 60;
     
@@ -60,10 +67,10 @@ main :: proc() {
 
         move: Vec3D = game.PlayerGetDirection();
 
-        if(move != 0 && game.PlayerCheckMove(&testMap, &testEntity, move)) {
-            fmt.println("move called")
-            engine.EMove(&testMap, &testEntity, move);
-        }
+        if move != 0 {
+        nmv: Vec3D = game.PlayerMoveAdaptation(&testMap, &testEntity, move); 
+        engine.EMove(&testMap, &testEntity, nmv);
+        } 
        
 
         rl.BeginDrawing();

@@ -2,11 +2,18 @@ package engine
 
 import rl "vendor:raylib"
 
+CommonProperty :: enum {
+    GravityApply,
+}
+
+CommonProperties :: bit_set[CommonProperty];
+
 CellAttributes :: struct {
     RelativeID: i8,
     Pos: Vec3D,
     Shape: Vec3D,
     Colors: [2]rl.Color,
+    Commonprops: CommonProperties,
 }
 
 

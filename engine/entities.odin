@@ -6,17 +6,22 @@ import  "rogue:utils"
 
 Vec3D :: utils.Vec3D;
 
+ClimbCapacities :: struct {
+    StepHeight: f32,
+    ClimbMax: f32,
+}
+
 Entity :: struct {
     using header: CellAttributes,
-
+    Climb: ClimbCapacities,
 }
 
 EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {
     o: ^CellAttributes = GetCellAttributes(e);
 
-    adjustedPos: Vec3D = m.origin + o.Pos;
+    adjustedPos: Vec3D = m.Origin + o.Pos;
     if(o.RelativeID >= 0) {
-        c := &m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)]; 
+        c := &m.Cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)]; 
         for i: int = 0; i < len(c.Objects); i += 1 {
             checkObj: ^CellAttributes = GetCellAttributes(c.Objects[i])
             if(checkObj.RelativeID == o.RelativeID) {
@@ -29,16 +34,16 @@ EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {
    
     o.Pos += v;
     adjustedPos += v;
-    inboud_map: bool =  m.size[0].x <= adjustedPos.x && adjustedPos.x < m.size[1].x && 
-                        m.size[0].y <= adjustedPos.y && adjustedPos.y < m.size[1].y && 
-                        m.size[0].z <= adjustedPos.z && adjustedPos.z < m.size[1].z;
+    inboud_map: bool =  m.Size[0].x <= adjustedPos.x && adjustedPos.x < m.Size[1].x && 
+                        m.Size[0].y <= adjustedPos.y && adjustedPos.y < m.Size[1].y && 
+                        m.Size[0].z <= adjustedPos.z && adjustedPos.z < m.Size[1].z;
           
     if !inboud_map {
         o.RelativeID = -1;
         return;
     }
 
-    nc := &m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)];
+    nc := &m.Cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)];
     
     o.RelativeID = GetAvailableID(nc^);
     
