@@ -28,5 +28,5 @@ AddObject :: proc (m: ^Map, cnt: CellContent) {
     adjustedPos: Vec3D = o.Pos + m.origin;
 
     o.RelativeID = GetAvailableID(m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)])
-    append(&m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)].objects, cnt);
+    append(&m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)].Objects, cnt);
 } 

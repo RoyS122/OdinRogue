@@ -18,7 +18,7 @@ CellContent :: union {
 
 
 Cell :: struct {
-    objects: [dynamic]CellContent,
+    Objects: [dynamic]CellContent,
 }   
 
 
@@ -33,8 +33,8 @@ GetCellAttributes :: proc (c: CellContent) -> ^CellAttributes {
 GetAvailableID :: proc (c: Cell) -> (id: i8) {
     id_unavailable: [max(i8)]bool; 
 
-    for i: int = 0; i < len(c.objects); i += 1 {
-        checkObj: ^CellAttributes = GetCellAttributes(c.objects[i]);
+    for i: int = 0; i < len(c.Objects); i += 1 {
+        checkObj: ^CellAttributes = GetCellAttributes(c.Objects[i]);
         id_unavailable[checkObj.RelativeID] = true;
     } 
 

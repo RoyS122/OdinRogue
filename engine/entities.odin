@@ -17,10 +17,10 @@ EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {
     adjustedPos: Vec3D = m.origin + o.Pos;
     if(o.RelativeID >= 0) {
         c := &m.cells[int(adjustedPos.x)][int(adjustedPos.y)][int(adjustedPos.z)]; 
-        for i: int = 0; i < len(c.objects); i += 1 {
-            checkObj: ^CellAttributes = GetCellAttributes(c.objects[i])
+        for i: int = 0; i < len(c.Objects); i += 1 {
+            checkObj: ^CellAttributes = GetCellAttributes(c.Objects[i])
             if(checkObj.RelativeID == o.RelativeID) {
-                unordered_remove(&c.objects, i);
+                unordered_remove(&c.Objects, i);
                 o.RelativeID = -1;
             }
         }
@@ -42,5 +42,5 @@ EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {
     
     o.RelativeID = GetAvailableID(nc^);
     
-    append(&nc.objects, e);
+    append(&nc.Objects, e);
 }

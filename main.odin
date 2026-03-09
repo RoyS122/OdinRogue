@@ -5,6 +5,7 @@ import rl "vendor:raylib"
 import "test"
 import engine "engine"
 import render "render"
+import game "game";
 
 import "utils"
 
@@ -23,14 +24,17 @@ main :: proc() {
     fmt.println(test.TestProc(int(a), 2));
 
     testCam: rl.Camera3D;
-    testCam.position = Vec3D{0, 10, 10};
-    // testCam.target = Vec3D{0, 0, 0};
+    testCam.position = Vec3D{-10, 10, 10};
+    testCam.target = Vec3D{0, 0, 0};
     testCam.up = Vec3D{0, 1, 0};
     testCam.fovy = f32(45);
     testCam.projection = .PERSPECTIVE;
 
     testMap: engine.Map = engine.BuildMap({20, 20, 20}, {10, 0, 10});
     testEntity: engine.Entity = {Pos = {-9, 0, 0}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}};
+
+    testWall: engine.Material = {Pos = {7, 0, -5}, Shape = {1, 1, 1}, Colors={rl.DARKGRAY, rl.GRAY}, props={.Solid}};
+    engine.AddObject(&testMap, &testWall);
     engine.AddObject(&testMap, &testEntity);
     targetFPS: i32 = 60;
     
@@ -53,21 +57,10 @@ main :: proc() {
         // testCam.position[0] += 0.01* f32(bounced)
         
 
-        move: Vec3D = {0, 0, 0}
 
-        if rl.IsKeyPressed(.RIGHT) {
-            move.x += 1;
-        }
-        if rl.IsKeyPressed(.LEFT) {
-            move.x -= 1;
-        }
-        if rl.IsKeyPressed(.UP) {
-            move.z -= 1;
-        }
-        if rl.IsKeyPressed(.DOWN) {
-            move.z += 1;
-        }
-        if(move != 0 ) {
+        move: Vec3D = game.PlayerGetDirection();
+
+        if(move != 0 && game.PlayerCheckMove(&testMap, &testEntity, move)) {
             fmt.println("move called")
             engine.EMove(&testMap, &testEntity, move);
         }
