@@ -50,7 +50,7 @@ PlayerCheckMove :: proc (m: ^engine.Map, e: ^engine.Entity, move: Vec3D) -> bool
 }
 
 PlayerMoveAdaptation :: proc (m: ^engine.Map, e: ^engine.Entity, move: Vec3D) -> (nmv: Vec3D) {
-    // targetPos: Vec3D = e.Pos + move;
+    
     adjustedPos: Vec3D = m.Origin + e.Pos + move;
     inboud_map: bool =  m.Size[0].x <= adjustedPos.x && adjustedPos.x < m.Size[1].x && 
                         m.Size[0].y <= adjustedPos.y && adjustedPos.y < m.Size[1].y && 
@@ -60,15 +60,14 @@ PlayerMoveAdaptation :: proc (m: ^engine.Map, e: ^engine.Entity, move: Vec3D) ->
     }
     
     VertScanScope: int = int((adjustedPos.y + e.Shape.y) / m.CellShape.y +0.999);
-    fmt.println(VertScanScope, adjustedPos, e.Shape)
+
     for i: int = VertScanScope; i >= 0; i -= 1 {
         checkCell: ^engine.Cell = &m.Cells[int(adjustedPos.x)][i][int(adjustedPos.z)]
         for j: int = 0; j < len(checkCell.Objects); j += 1 {
             #partial switch v in checkCell.Objects[j]  {
                 case ^engine.Material:
-                        fmt.println("Material triggered")
                     if (.Solid in v.props) {
-                        fmt.println("solid triggered")
+                        
                         obstacleNonClimbable: bool = v.Pos.y + v.Shape.y > e.Climb.StepHeight + e.Pos.y &&
                                                     v.Pos.y < e.Pos.y + e.Shape.y; 
 
@@ -93,13 +92,6 @@ PlayerMoveAdaptation :: proc (m: ^engine.Map, e: ^engine.Entity, move: Vec3D) ->
             }
         }
     }
-    
-   
-    
-    // groundFound: f32 = -1; 
-    // for e.Pos.y - nmv.y > 0 && groudFound == -1 {
-    //     e.Pos.y
-    // }
     
     nmv.y = - e.Pos.y;
     return nmv + move;
