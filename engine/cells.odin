@@ -14,6 +14,7 @@ CellAttributes :: struct {
     Shape: Vec3D,
     Colors: [2]rl.Color,
     Commonprops: CommonProperties,
+    Model: ^rl.Model
 }
 
 

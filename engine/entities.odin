@@ -14,6 +14,7 @@ ClimbCapacities :: struct {
 Entity :: struct {
     using header: CellAttributes,
     Climb: ClimbCapacities,
+    
 }
 
 EMove::proc(m: ^Map, e: ^Entity, v: Vec3D) {

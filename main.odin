@@ -31,7 +31,10 @@ main :: proc() {
     testCam.projection = .PERSPECTIVE;
 
     testMap: engine.Map = engine.BuildMap({20, 20, 20}, {10, 0, 10});
-    testEntity: engine.Entity = {Pos = {-9, 0, 0}, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}, Commonprops={.GravityApply}, Climb={ClimbMax=1, StepHeight=0.25}};
+   
+ 
+    
+    testEntity: engine.Entity = {Pos = {-9, 0, 0}, Model=nil, Shape = {1, 1, 1}, Colors={rl.YELLOW, rl.GRAY}, Commonprops={.GravityApply}, Climb={ClimbMax=1, StepHeight=0.25}};
 
     testWall: engine.Material = {Pos = {7, 0, -5}, Shape = {1, 0.25, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
     testWall2: engine.Material = {Pos = {7, 0, -6}, Shape = {1, 0.5, 1}, Colors={rl.DARKGRAY, rl.GRAY}, Commonprops={.GravityApply}, props={.Solid}};
@@ -51,6 +54,10 @@ main :: proc() {
     defer rl.CloseWindow();
 
     rl.SetTargetFPS(targetFPS);
+
+     testModel: rl.Model = rl.LoadModel("assets/Untitled.gltf");
+     testEntity.Model = &testModel;
+   
     
     bounced: i8 = 1;
     for !rl.WindowShouldClose() {
